@@ -1,7 +1,7 @@
 """anomaly_detector.py - Project script (example).
 
-Author: Your Name Here
-Date: 2026-mm-dd
+Author: Anindya Bose
+Date: 2026-10-29
 
 Static Data
 
@@ -56,7 +56,11 @@ from typing import Final
 from datafun_toolkit.logger import get_logger, log_header, log_path
 import polars as pl
 
-from cintel.utils_clinic import detect_clinic_anomalies, load_clinic_data
+from cintel.utils_clinic import (
+    detect_clinic_anomalies,
+    detect_outliers,
+    load_clinic_data,
+)
 
 # === CONFIGURE LOGGER ===
 
@@ -72,7 +76,6 @@ ARTIFACTS_DIR: Final[Path] = ROOT_DIR / "artifacts"
 
 DATA_FILE: Final[Path] = DATA_DIR / "clinic_data.csv"
 OUTPUT_FILE: Final[Path] = ARTIFACTS_DIR / "anomalies.csv"
-
 
 # === DEFINE THE MAIN FUNCTION ===
 
@@ -146,6 +149,8 @@ def main() -> None:
 
     LOG.info(f"Count of anomalies found: {anomalies_df.height}")
 
+    outliers_df: pl.DataFrame = detect_outliers(df)
+
     # ----------------------------------------------------
     # STEP 3: SAVE THE OUTPUT ANOMALIES AS EVIDENCE
     # ----------------------------------------------------
@@ -156,7 +161,10 @@ def main() -> None:
     # Every Polars DataFrame has a write_csv() method that saves it as a CSV file.
     # Just pass in the full Path to the file you want to create.
     anomalies_df.write_csv(OUTPUT_FILE)
+    outliers_df.write_csv(ARTIFACTS_DIR / "outliers.csv")
+
     LOG.info(f"Wrote anomalies file: {OUTPUT_FILE}")
+    LOG.info(f"Wrote outliers file: {ARTIFACTS_DIR / 'outliers.csv'}")
 
     LOG.info("========================")
     LOG.info("Pipeline executed successfully!")
