@@ -30,7 +30,7 @@ def detect_clinic_anomalies(
 
 
 def detect_outliers(df: pl.DataFrame, include: str = "yes") -> pl.DataFrame:
-    """Return rows meeting one or more defined outlier threshold conditions."""
+    """Return rows meeting age/height outlier threshold conditions."""
     df = df.with_columns(
         (pl.col("age_years") / pl.col("height_inches")).alias("age_height_ratio")
     ).with_columns(

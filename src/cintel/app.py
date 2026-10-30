@@ -119,8 +119,8 @@ def _(load_clinic_data, mo, sys):
 
 @app.cell
 def _(mo):
-    max_age = mo.ui.slider(0, 20, value=16, label="Max reasonable age (years)")
-    max_height = mo.ui.slider(0, 90, value=72, label="Max reasonable height (inches)")
+    max_age = mo.ui.slider(0, 20, value=15, label="Max reasonable age (years)")
+    max_height = mo.ui.slider(0, 90, value=70, label="Max reasonable height (inches)")
     mo.hstack([max_age, max_height])
     return max_age, max_height
 
