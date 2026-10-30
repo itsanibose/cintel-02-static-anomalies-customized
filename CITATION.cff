@@ -12,17 +12,17 @@ cff-version: "1.2.0"
 message: "If using this project, please cite it as described in this file."
 type: software
 
-title: cintel-02-static-anomalies
-date-released: "2026-03-06"
+title: cintel-02-static-anomalies-customized
+date-released: "2026-10-29"
 
 authors:
-  - family-names: Case
-    given-names: Denise M.
-    orcid: "https://orcid.org/0000-0001-6165-7389"
+  - family-names: Bose
+    given-names: Anindya
+    orcid: "https://orcid.org/0009-0001-6404-4366"
     affiliation: "Northwest Missouri State University, USA"
 
-repository-code: "https://github.com/denisecase/cintel-02-static-anomalies"
-url: "https://github.com/denisecase/cintel-02-static-anomalies"
+repository-code: "https://github.com/itsanibose/cintel-02-static-anomalies-customized"
+url: "https://github.com/itsanibose/cintel-02-static-anomalies-customized"
 license: MIT
 
 abstract: |
