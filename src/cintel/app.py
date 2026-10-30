@@ -27,7 +27,10 @@ PLAN CELLS FIRST
 4. Threshold controls (sliders)
 5. Detect anomalies (same logic as the CLI pipeline, via cintel.utils_clinic)
 6. Show the results (count + table)
-7. Closing (Markdown)
+7. Outlier controls (radio: all records or outliers only)
+8. Detect outliers (age/height ratio, via cintel.utils_clinic)
+9. Show the outlier results (count + table)
+10. Closing (Markdown)
 
 Note: marimo triggers @app.cell functions automatically; we never call them.
 The names starting with "_" are for our own organization; the engine ignores
@@ -57,9 +60,13 @@ async def _():
     import marimo as mo
     import polars as pl
 
-    from cintel.utils_clinic import detect_clinic_anomalies, load_clinic_data
+    from cintel.utils_clinic import (
+        detect_clinic_anomalies,
+        detect_outliers,
+        load_clinic_data,
+    )
 
-    return detect_clinic_anomalies, load_clinic_data, mo, pl, sys
+    return detect_clinic_anomalies, detect_outliers, load_clinic_data, mo, pl, sys
 
 
 # === TITLE AND INTRODUCTION ===
@@ -68,9 +75,9 @@ async def _():
 @app.cell
 def _(mo):
     mo.md(r"""
-    # Static Anomaly Detection
+    # Static Anomaly and Outlier Detection
 
-    This app flags pediatric clinic records where **age** or **height**
+    This app flags pediatric clinic records where **age** or **height** or ratio of age to height
     is higher than expected.
 
     Move the sliders below to change what counts as an anomaly.
@@ -142,6 +149,46 @@ def _(anomalies_df, df, mo):
 @app.cell
 def _(anomalies_df, mo):
     mo.ui.table(anomalies_df)
+
+
+# === OUTLIER CONTROLS (AGE / HEIGHT RATIO) ===
+
+
+@app.cell
+def _(mo):
+    include_all = mo.ui.radio(
+        options={"All records (with outlier flag)": "yes", "Outliers only": "no"},
+        value="All records (with outlier flag)",
+        label="Records to show in the outlier table",
+    )
+    mo.vstack([include_all])
+    return (include_all,)
+
+
+# === DETECT OUTLIERS ===
+
+
+@app.cell
+def _(detect_outliers, df, include_all):
+    outliers_df = detect_outliers(df, include=include_all.value)
+    return (outliers_df,)
+
+
+# === SHOW THE OUTLIER RESULTS ===
+
+
+@app.cell
+def _(df, mo, pl, outliers_df):
+    _n_outliers = outliers_df.filter(pl.col("outlier_flag") == "outlier").height
+    mo.md(
+        f"**{_n_outliers} of {df.height} records** flagged as outliers "
+        "(age/height ratio below 0.03 or above 0.30)."
+    )
+
+
+@app.cell
+def _(mo, outliers_df):
+    mo.ui.table(outliers_df)
 
 
 # === TYPICALLY END WITH A MARKDOWN SOURCE LINK AND CLOSING ===

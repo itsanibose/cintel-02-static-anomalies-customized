@@ -14,7 +14,7 @@
 
 
 [project]
-name = "cintel-02-static-anomalies"  # Usually matches repository name (use lowercase and dashes).
+name = "cintel-02-static-anomalies-customized"  # Usually matches repository name (use lowercase and dashes).
 readme = "README.md"
 requires-python = ">=3.14"
 version = "0.1.0"

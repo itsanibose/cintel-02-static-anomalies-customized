@@ -1,7 +1,7 @@
-# cintel-02-static-anomalies
+# cintel-02-static-anomalies-customized
 
 [![Python 3.14](https://img.shields.io/badge/python-3.14%2B-blue?logo=python)](pyproject.toml)
-[![CI](https://github.com/denisecase/cintel-02-static-anomalies/actions/workflows/ci-python-zensical.yml/badge.svg)](https://github.com/denisecase/cintel-02-static-anomalies/actions/workflows/ci-python-zensical.yml)
+[![CI](https://github.com/itsanibose/cintel-02-static-anomalies-customized/actions/workflows/ci-python-zensical.yml/badge.svg)](https://github.com/itsanibose/cintel-02-static-anomalies-customized/actions/workflows/ci-python-zensical.yml)
 [![Documentation](https://img.shields.io/badge/docs-site-blue?logo=github)](https://denisecase.github.io/cintel-02-static-anomalies/)
 
 [![uv managed](https://img.shields.io/badge/uv-managed-DE5FE9)](https://docs.astral.sh/uv/)
@@ -13,7 +13,7 @@
 
 ## Project Overview
 
-Author: Denise Case
+Author: Anindya Bose
 
 Date: 2026 October
 
@@ -35,6 +35,9 @@ Each observation includes:
 - `height_inches` - height in inches.
 
 The example demonstrates threshold-based detection.
+This examples has two functions
+1 - detect_clinic_anomalies() - Detects anomaly using upper threshold for both age and height
+2- detect_outliers() - Detect outlier by using ratio of `age in year` and `height in inches`
 Thresholds are instructional examples, not clinical standards.
 
 ## Approach
@@ -54,7 +57,7 @@ Explore these project components:
 
 ## Run the Project
 
-Follow the [Professional Python Workflow Guide](https://denisecase.github.io/pro-analytics-02/)
+Follow the [Professional Python Workflow Guide](https://itsanibose.github.io/cintel-02-static-anomalies-customized/)
 to set up your machine and project environment.
 
 From a VS Code terminal in the project root:
@@ -116,8 +119,8 @@ This project includes continuous integration and continuous deployment (CI/CD)
 to check project files and publish the docs.
 GitHub Actions include:
 
-- [CI: Python and Documentation Checks](https://github.com/denisecase/cintel-02-static-anomalies/actions/workflows/ci-python-zensical.yml)
-- [CD: Documentation Deployment](https://github.com/denisecase/cintel-02-static-anomalies/actions/workflows/deploy-zensical.yml)
+- [CI: Python and Documentation Checks](https://github.com//actions/workflows/ci-python-zensical.yml)
+- [CD: Documentation Deployment](https://github.com/itsanibose/cintel-02-static-anomalies-customized/actions/workflows/deploy-zensical.yml)
 
 ## Developer Reference
 

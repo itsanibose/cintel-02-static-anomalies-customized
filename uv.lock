@@ -83,7 +83,7 @@ wheels = [
 ]
 
 [[package]]
-name = "cintel-02-static-anomalies"
+name = "cintel-02-static-anomalies-customized"
 version = "0.1.0"
 source = { editable = "." }
 default-groups = "all"
