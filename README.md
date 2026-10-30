@@ -106,7 +106,7 @@ uv run pytest
 
 ## Project Documentation
 
-The [hosted documentation site](https://denisecase.github.io/cintel-02-static-anomalies/)
+The [hosted documentation site](https://itsanibose.github.io/cintel-02-static-anomalies-customized/)
 is published using Zensical and GitHub Pages.
 
 The documentation site is used to present the project report,
