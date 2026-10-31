@@ -1,6 +1,6 @@
 # Static Anomaly Detection
 
-Continuous Intelligence | Project 02 | Example Report
+Continuous Intelligence | Project 02 | Customized
 
 ## Overview
 
@@ -10,14 +10,16 @@ can identify unusual observations in static tabular data.
 The example analyzes pediatric clinic records to identify
 ages and heights outside defined upper limits.
 
+It also shows zscore of age/height ratio.
+
 ## Data
 
-The dataset contains 22 patient observations with:
+The dataset contains 126 patient observations with:
 
 - `age_years` - patient age in years.
 - `height_inches` - patient height in inches.
 
-[View Example Dataset](https://github.com/denisecase/cintel-02-static-anomalies/blob/main/data/clinic_data.csv)
+[View Example Dataset](https://github.com/itsanibose/cintel-02-static-anomalies-customized/blob/main/data/clinic_data.csv)
 
 ## Methods
 
@@ -41,7 +43,7 @@ The example pipeline identified **3 anomalous records**.
 | 10          | 72              | Height threshold |
 | 120         | 66              | Age threshold    |
 
-[View Anomaly Results](https://github.com/denisecase/cintel-02-static-anomalies/blob/main/artifacts/anomalies.csv)
+[View Anomaly Results](https://github.com/itsanibose/cintel-02-static-anomalies-customized/tree/main/artifacts)
 
 ## Interpretation
 
@@ -82,9 +84,9 @@ new observations arrive in a monitoring system.
 
 ## Project Links
 
-- [GitHub Repository](https://github.com/denisecase/cintel-02-static-anomalies)
-- [Example Pipeline](https://github.com/denisecase/cintel-02-static-anomalies/blob/main/src/cintel/anomaly_detector.py)
-- [Results and Artifacts](https://github.com/denisecase/cintel-02-static-anomalies/tree/main/artifacts)
+- [GitHub Repository](https://github.com/itsanibose/cintel-02-static-anomalies-customized)
+- [Example Pipeline](https://github.com/itsanibose/cintel-02-static-anomalies-customized/blob/main/src/cintel/anomaly_detector.py)
+- [Results and Artifacts](https://github.com/itsanibose/cintel-02-static-anomalies-customized/tree/main/artifacts)
 
 ## Project Resources
 
