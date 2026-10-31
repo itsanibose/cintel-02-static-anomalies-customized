@@ -1,7 +1,7 @@
 # ============================================================
 # .gitignore (ALL-REPOS)
 # ============================================================
-# Updated: 2026-10-11
+# Updated: 2026-10-30
 #
 # WHAT: A Git configuration file that identifies files and directories
 #       that should not be included in the repository's version history.
@@ -367,3 +367,8 @@ docs/assets/data/view-analytics.json
 docs/assets/data/guide-context.json
 # marimo WASM export; built at deploy time, not committed
 docs/app/
+
+
+# WHY: Do not add big data files to repository. Use external storage or data versioning tools instead.
+/data/2m Sales Records.csv
+/data/100 Sales Records.csv

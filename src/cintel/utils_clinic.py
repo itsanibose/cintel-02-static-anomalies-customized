@@ -31,16 +31,27 @@ def detect_clinic_anomalies(
 
 def detect_outliers(df: pl.DataFrame, include: str = "yes") -> pl.DataFrame:
     """Return rows meeting age/height outlier threshold conditions."""
-    df = df.with_columns(
-        (pl.col("age_years") / pl.col("height_inches")).alias("age_height_ratio")
-    ).with_columns(
-        pl.when(
-            (pl.col("age_height_ratio") < 0.03) | (pl.col("age_height_ratio") > 0.30)
+    df = (
+        df.with_columns(
+            (pl.col("age_years") / pl.col("height_inches")).alias("age_height_ratio")
         )
-        .then(pl.lit("outlier"))
-        .otherwise(pl.lit("normal"))
-        .alias("outlier_flag")
+        .with_columns(
+            pl.when(
+                (pl.col("age_height_ratio") < 0.03)
+                | (pl.col("age_height_ratio") > 0.30)
+            )
+            .then(pl.lit("outlier"))
+            .otherwise(pl.lit("normal"))
+            .alias("outlier_flag")
+        )
+        .with_columns(
+            (
+                (pl.col("age_height_ratio") - pl.col("age_height_ratio").mean())
+                / pl.col("age_height_ratio").std()
+            ).alias("age_height_zscore")
+        )
     )
+
     if include == "yes":
         return df
 

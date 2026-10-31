@@ -55,6 +55,7 @@ from typing import Final
 
 from datafun_toolkit.logger import get_logger, log_header, log_path
 import polars as pl
+from rich import print
 
 from cintel.utils_clinic import (
     detect_clinic_anomalies,
@@ -150,6 +151,11 @@ def main() -> None:
     LOG.info(f"Count of anomalies found: {anomalies_df.height}")
 
     outliers_df: pl.DataFrame = detect_outliers(df)
+    outliers = outliers_df.filter(pl.col("outlier_flag") == "outlier")
+
+    if outliers.height > 0:
+        LOG.info(f"Count of age/height outliers: {outliers.height}")
+        print(outliers)
 
     # ----------------------------------------------------
     # STEP 3: SAVE THE OUTPUT ANOMALIES AS EVIDENCE
