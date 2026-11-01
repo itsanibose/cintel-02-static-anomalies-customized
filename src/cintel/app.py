@@ -11,8 +11,8 @@ RUN LOCALLY:
 WASM DEPENDENCIES:
 
 Under WebAssembly (emscripten) the browser has no project environment.
-This app uses polars in addition to marimo, so the first cell installs
-polars with micropip when running under WASM.
+This app uses polars and matplotlib in addition to marimo, so the first
+cell installs them with micropip when running under WASM.
 
 NO LOGGING:
 
@@ -24,13 +24,12 @@ PLAN CELLS FIRST
 1. Imports (installs WASM deps, returns shared imports and constants)
 2. Opening title and introduction (Markdown)
 3. Load the clinic data (same cell handles local and WASM environments)
-4. Threshold controls (sliders)
+4. Controls (anomaly threshold sliders + outlier radio)
 5. Detect anomalies (same logic as the CLI pipeline, via cintel.utils_clinic)
-6. Show the results (count + table)
-7. Outlier controls (radio: all records or outliers only)
-8. Detect outliers (age/height ratio, via cintel.utils_clinic)
-9. Show the outlier results (count + table)
-10. Closing (Markdown)
+6. Detect outliers (age/height ratio, via cintel.utils_clinic)
+7. Show the results side by side (anomalies left, outliers right)
+8. Age vs height scatter plot (below the two tables)
+9. Closing (Markdown)
 
 Note: marimo triggers @app.cell functions automatically; we never call them.
 The names starting with "_" are for our own organization; the engine ignores
@@ -55,18 +54,27 @@ async def _():
     if sys.platform == "emscripten":
         import micropip
 
-        await micropip.install("polars")
+        await micropip.install(["polars", "matplotlib"])
 
     import marimo as mo
     import polars as pl
 
     from cintel.utils_clinic import (
+        build_age_height_figure,
         detect_clinic_anomalies,
         detect_outliers,
         load_clinic_data,
     )
 
-    return detect_clinic_anomalies, detect_outliers, load_clinic_data, mo, pl, sys
+    return (
+        build_age_height_figure,
+        detect_clinic_anomalies,
+        detect_outliers,
+        load_clinic_data,
+        mo,
+        pl,
+        sys,
+    )
 
 
 # === TITLE AND INTRODUCTION ===
@@ -114,15 +122,19 @@ def _(load_clinic_data, mo, sys):
     return (df,)
 
 
-# === THRESHOLD CONTROLS ===
+# === CONTROLS (DISPLAYED IN THE LAYOUT CELL BELOW) ===
 
 
 @app.cell
 def _(mo):
     max_age = mo.ui.slider(0, 20, value=15, label="Max reasonable age (years)")
     max_height = mo.ui.slider(0, 90, value=70, label="Max reasonable height (inches)")
-    mo.hstack([max_age, max_height])
-    return max_age, max_height
+    include_all = mo.ui.radio(
+        options={"All records (with outlier flag)": "yes", "Outliers only": "no"},
+        value="All records (with outlier flag)",
+        label="Records to show in the outlier table",
+    )
+    return include_all, max_age, max_height
 
 
 # === DETECT ANOMALIES (SAME LOGIC AS THE CLI PIPELINE) ===
@@ -138,33 +150,6 @@ def _(detect_clinic_anomalies, df, max_age, max_height):
     return (anomalies_df,)
 
 
-# === SHOW THE RESULTS ===
-
-
-@app.cell
-def _(anomalies_df, df, mo):
-    mo.md(f"**{anomalies_df.height} of {df.height} records** flagged as anomalies.")
-
-
-@app.cell
-def _(anomalies_df, mo):
-    mo.ui.table(anomalies_df)
-
-
-# === OUTLIER CONTROLS (AGE / HEIGHT RATIO) ===
-
-
-@app.cell
-def _(mo):
-    include_all = mo.ui.radio(
-        options={"All records (with outlier flag)": "yes", "Outliers only": "no"},
-        value="All records (with outlier flag)",
-        label="Records to show in the outlier table",
-    )
-    mo.vstack([include_all])
-    return (include_all,)
-
-
 # === DETECT OUTLIERS ===
 
 
@@ -174,21 +159,50 @@ def _(detect_outliers, df, include_all):
     return (outliers_df,)
 
 
-# === SHOW THE OUTLIER RESULTS ===
+# === SHOW THE RESULTS SIDE BY SIDE ===
 
 
 @app.cell
-def _(df, mo, pl, outliers_df):
+def _(anomalies_df, df, include_all, max_age, max_height, mo, outliers_df, pl):
     _n_outliers = outliers_df.filter(pl.col("outlier_flag") == "outlier").height
-    mo.md(
-        f"**{_n_outliers} of {df.height} records** flagged as outliers "
-        "(age/height ratio below 0.03 or above 0.30)."
+
+    _anomaly_panel = mo.vstack(
+        [
+            mo.md("### Anomalies (age / height thresholds)"),
+            mo.hstack([max_age, max_height], justify="start", gap=2),
+            mo.md(
+                f"**{anomalies_df.height} of {df.height} records** flagged as anomalies."
+            ),
+            mo.ui.table(anomalies_df),
+        ]
     )
 
+    _outlier_panel = mo.vstack(
+        [
+            mo.md("### Outliers (age / height ratio)"),
+            include_all,
+            mo.md(
+                f"**{_n_outliers} of {df.height} records** flagged as outliers "
+                "(age/height ratio below 0.03 or above 0.30)."
+            ),
+            mo.ui.table(outliers_df),
+        ]
+    )
+
+    mo.hstack([_anomaly_panel, _outlier_panel], widths="equal", gap=2, align="start")
+
+
+# === AGE VS HEIGHT SCATTER PLOT ===
+
 
 @app.cell
-def _(mo, outliers_df):
-    mo.ui.table(outliers_df)
+def _(build_age_height_figure, df, mo):
+    mo.vstack(
+        [
+            mo.md("### Age vs. Height"),
+            build_age_height_figure(df),
+        ]
+    )
 
 
 # === TYPICALLY END WITH A MARKDOWN SOURCE LINK AND CLOSING ===

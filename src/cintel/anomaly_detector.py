@@ -61,6 +61,7 @@ from cintel.utils_clinic import (
     detect_clinic_anomalies,
     detect_outliers,
     load_clinic_data,
+    plot_age_height,
 )
 
 # === CONFIGURE LOGGER ===
@@ -152,6 +153,8 @@ def main() -> None:
 
     outliers_df: pl.DataFrame = detect_outliers(df)
     outliers = outliers_df.filter(pl.col("outlier_flag") == "outlier")
+
+    plot_age_height(df)  # Call the function to create the scatter plot
 
     if outliers.height > 0:
         LOG.info(f"Count of age/height outliers: {outliers.height}")

@@ -33,6 +33,12 @@ Each observation includes:
 
 - `age_years` - age in years.
 - `height_inches` - height in inches.
+- `age_height_ratio` - this is a calculated field
+- `outlier_flag` - calculated based on age_height_ratio, range between 0.03 and 0.30
+- `age_height_zscore`
+
+
+  ![Z-score calculation](docs\images\z-score.png)
 
 The example demonstrates threshold-based detection.
 This examples has two functions

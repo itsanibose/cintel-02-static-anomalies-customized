@@ -8,8 +8,15 @@ Used by:
 """
 
 from pathlib import Path
+from typing import Final
 
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
 import polars as pl
+
+# === DECLARE GLOBAL CONSTANTS FOR FOLDER PATHS (directories) ===
+ROOT_DIR: Final[Path] = Path.cwd()
+ARTIFACTS_DIR: Final[Path] = ROOT_DIR / "artifacts"
 
 
 def load_clinic_data(data_file: Path) -> pl.DataFrame:
@@ -56,3 +63,40 @@ def detect_outliers(df: pl.DataFrame, include: str = "yes") -> pl.DataFrame:
         return df
 
     return df.filter(pl.col("outlier_flag") == "outlier")
+
+
+# Adding function for a scatter plot of age vs height
+def build_age_height_figure(df: pl.DataFrame) -> Figure:
+    """Build and return a scatter plot figure of age vs height.
+
+    Used directly by app.py (marimo renders the returned figure).
+    """
+    # Create a figure and axis
+    fig, ax = plt.subplots(figsize=(8, 5))
+
+    # Pass Polars columns directly into the scatter function
+    ax.scatter(
+        x=df["age_years"],
+        y=df["height_inches"],
+        color="crimson",
+        alpha=0.6,
+        edgecolors="black",
+    )
+
+    # Customizing the chart elements
+    ax.set_title(
+        "Age vs. Height Scatter Plot (Using Polars)", fontsize=14, fontweight="bold"
+    )
+    ax.set_xlabel("Age (Years)", fontsize=11)
+    ax.set_ylabel("Height (Inches)", fontsize=11)
+    ax.grid(True, linestyle="--", alpha=0.5)
+
+    return fig
+
+
+def plot_age_height(df: pl.DataFrame) -> None:
+    """Show the age vs height scatter plot and save it to artifacts/."""
+    fig = build_age_height_figure(df)
+
+    plt.show()
+    fig.savefig(ARTIFACTS_DIR / "age_vs_height_plot.png", dpi=300, bbox_inches="tight")
