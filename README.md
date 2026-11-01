@@ -38,7 +38,7 @@ Each observation includes:
 - `age_height_zscore`
 
 
-  ![Z-score calculation](docs\images\z-score.png)
+![Z-score calculation](docs\images\z-score.png)
 
 The example demonstrates threshold-based detection.
 This examples has two functions
